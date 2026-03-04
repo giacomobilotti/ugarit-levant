@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SAGA_METADATA>
+  <DATABASE></DATABASE>
+  <SOURCE></SOURCE>
+  <HISTORY saga-version="9.3.2">
+    <TOOL library="grid_calculus" id="0" name="Grid Normalization">
+      <OPTION type="grid_system" id="PARAMETERS_GRID_SYSTEM" name="Grid System">
+        <CELLSIZE>30.92208078239605</CELLSIZE>
+        <XMIN>3975961.146160391</XMIN>
+        <YMIN>4206920.887182384</YMIN>
+        <XMAX>4039165.879279609</XMAX>
+        <YMAX>4293286.258807616</YMAX>
+      </OPTION>
+      <OPTION type="range" id="RANGE" name="Target Range">0; 1</OPTION>
+      <INPUT type="grid" id="INPUT" name="Grid" system="PARAMETERS_GRID_SYSTEM">
+        <TOOL library="io_gdal" id="0" name="Import Raster">
+          <OPTION type="file" id="FILES" name="Files">"E:/Progetto dottorato_DESK/QGIS/DEM/Ugarit/DEFINITIVI/Fuzzy/Definitivi/Vite_collina_pendenza1020_TWImin15.tif"</OPTION>
+          <OPTION type="choice" id="MULTIPLE" name="Multiple Bands Output" index="2">automatic</OPTION>
+          <OPTION type="text" id="SUBSETS" name="Subsets"/>
+          <OPTION type="text" id="SELECTION" name="Select from Multiple Bands"/>
+          <OPTION type="boolean" id="TRANSFORM" name="Transformation">true</OPTION>
+          <OPTION type="choice" id="RESAMPLING" name="Resampling" index="3">B-Spline Interpolation</OPTION>
+          <OPTION type="choice" id="EXTENT" name="Extent" index="0">original</OPTION>
+          <OUTPUT type="grid_list" id="GRIDS" name="Grids">Vite_collina_pendenza1020_TWImin15</OUTPUT>
+        </TOOL>
+      </INPUT>
+      <OUTPUT type="grid" id="OUTPUT" name="Normalized Grid">Normalized Grid (Normalized)</OUTPUT>
+    </TOOL>
+  </HISTORY>
+  <FILE></FILE>
+  <DESCRIPTION></DESCRIPTION>
+  <PROJECTION>
+    <OGC_WKT>PROJCS["WGS 84 / Pseudo-Mercator",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]],PROJECTION["Mercator_1SP"],PARAMETER["central_meridian",0],PARAMETER["scale_factor",1],PARAMETER["false_easting",0],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AXIS["X",EAST],AXIS["Y",NORTH],EXTENSION["PROJ4","+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs"],AUTHORITY["EPSG","3857"]]</OGC_WKT>
+    <PROJ4>+proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs</PROJ4>
+    <EPSG>3857</EPSG>
+  </PROJECTION>
+</SAGA_METADATA>
