@@ -4,6 +4,8 @@ This repository contains the necessary instructions to carry out the analyses de
 
 **Reconstructing the Organisation and Agricultural Capacity of Late Bronze Age kingdom  of Ugarit: A Statistical and Spatial Modelling Approach**
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18890321.svg)](https://doi.org/10.5281/zenodo.18890321)
+
 ## Paper Authors
 
 Cristiana Liberati(a), Giacomo Bilotti(b)
