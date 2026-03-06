@@ -17,7 +17,7 @@ Thumbs.db
 # RStudio
 ############################################
 
-.Rproj.user/
+.Rproj
   
   ############################################
 # Quarto / R Markdown cache
