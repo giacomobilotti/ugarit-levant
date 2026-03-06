@@ -5,15 +5,15 @@ settl_dens <- data.frame(
   Density = c(38, 8, 11, 7, 16, 7, 9, 5) # note that values are rounded to unit and sum to 101
 )
 
-tiff(filename = file.path('figures', 'Figure2.tiff'), width = 9, height = 5, res = 1200, units = 'in')
+tiff(filename = file.path('figures', 'Figure2.tiff'), width = 9, height = 5, res = 300, units = 'in')
 bp <- barplot(
   height     = settl_dens$Density,
   names.arg  = settl_dens$Group,
   col        = 'steelblue',
   border     = NA,
-  main       = 'Settlement Density',
+  main       = '',
   xlab       = '',
-  ylab       = 'Density',
+  ylab       = 'Percentage',
   las        = 1,
   ylim       = c(0, max(settl_dens$Density) * 1.2)
 )

@@ -15,9 +15,6 @@ fit_pred <- terra::rast(file.path(targetdir, "prediction.tif"))
 rast_pred <- terra::rast(file.path(targetdir, "dens_prediction.tif"))
 suit_com <- terra::rast(file.path(targetdir, "suitability.tif"))
 
-stars::write_stars(obj = res, dsn = file.path(targetdir, "result.tif"))
-terra::writeRaster(res2, file.path(targetdir, "result2.tif"), overwrite = TRUE)
-
 pal <- viridisLite::inferno(7)
 pal_def <- c('white', pal[2:7])
 
@@ -59,6 +56,4 @@ tm_b <- tm_shape(rast_pred) +
 
 
 tmap_save(tmap_arrange(tm_a, tm_b), filename = file.path('figures', "Figure5.tiff"), device = tiff,
-          height = 7, width = 11, dpi = 1200)
-# tmap_save(tmap_arrange(tm_a, tm_b), filename = file.path('figures', "Figure_5.pdf"), device = cairo_pdf,
-#           height = 7, width = 11)
+          height = 7, width = 11, dpi = 300)

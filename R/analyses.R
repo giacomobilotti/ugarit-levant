@@ -36,9 +36,6 @@ covs <- parallel::parLapply(
 parallel::stopCluster(clus)
 names(covs) <- c("elevation", "rivers", "slope", "suitability_cereals", "suitability_olives", "suitability_vines")
 
-## normalize vines
-covs$suitability_vines <- covs$suitability_vines/max(covs$suitability_vines) 
-
 #### ppm-prediction
 
 ## convert sites to ppp object (spatstat)
@@ -145,10 +142,6 @@ covs$suitability_cereals <- terra::rast(file.path(targetdir, "rasters", "extra",
   stars::st_as_stars() |>
   as.im()
 
-## normalize
-covs$suitability_cereals <- covs$suitability_cereals/max(covs$suitability_cereals)
-
-
 ## The GLM does not converge with this set up. Therefore we apply a simple PPM, without accounting for clustering
 
 fit <- ppm(sites_ppp ~ suitability_vines + suitability_olives +
@@ -193,11 +186,9 @@ stars::write_stars(obj = rast_pred, dsn = file.path(targetdir, "dens_prediction_
 
 ## Now predict sites solely based on land suitability
 
-clus <- parallel::makeCluster(2, type = "FORK")
-suit_pred <- parallel::parLapply(
-  cl = clus,
+suit_pred <- lapply(
   X = covs[4:6],
-  fun = function(cov){
+  FUN = function(cov){
     tmp_pp <- rpoispp(cov, lmax = 1, win = as.owin(area), forcewin = TRUE)
     tmp_subpp <- sample(1:tmp_pp$n, 200)
     tmp_pp <- ppp(x = tmp_pp$x[tmp_subpp], y = tmp_pp$y[tmp_subpp], window = as.owin(area))
@@ -205,7 +196,6 @@ suit_pred <- parallel::parLapply(
     tmp_scaled <- tmp_dens/max(tmp_dens)
     return(tmp_scaled)
   })
-parallel::stopCluster(clus)
 
 suit_com <- Reduce(f = function(x, y) {x+y}, x = suit_pred)
 suit_com <- suit_com/max(suit_com)
