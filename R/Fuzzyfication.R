@@ -11,6 +11,7 @@ sourcedir <- file.path('data', 'raw_data')
 
 # load rasters
 dem <- terra::rast(file.path(sourcedir, 'dem.tif'))
+terra::terrain(dem, v = 'slope', filename = file.path(targetdir, 'rasters', 'slope.tif'))
 slope <- terra::terrain(file.path(targetdir, 'rasters', 'slope.tif'))
 twi <- terra::rast(file.path(sourcedir, 'dem.tif'))
 

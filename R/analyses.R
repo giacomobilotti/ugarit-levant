@@ -1,4 +1,4 @@
-#### Script to carry out the analyses presented in the paper ----
+##### Script to carry out the analyses presented in the paper ----
 
 ## Directories and libraries
 targetdir <- file.path("data", "derived_data")
@@ -36,9 +36,9 @@ covs <- parallel::parLapply(
 parallel::stopCluster(clus)
 names(covs) <- c("elevation", "rivers", "slope", "suitability_cereals", "suitability_olives", "suitability_vines")
 
-#### ppm-prediction
+#### PPM-prediction ----
 
-## convert sites to ppp object (spatstat)
+## convert sites to ppp object 
 sites_ppp <- ppp(
   x = sf::st_coordinates(sites)[,1],
   y = sf::st_coordinates(sites)[,2],
@@ -47,7 +47,7 @@ sites_ppp <- ppp(
 
 rr <- data.frame(r = seq(2000, 5900, by=100))
 ps <- profilepl(rr, Strauss, sites_ppp)
-
+# check optimal R
 # plot(ps, main = "Optimal r for Strauss PP")
 # 5000 m
 
@@ -56,11 +56,10 @@ fit <- ppm(sites_ppp ~ bs(suitability_vines, 3) + bs(suitability_olives, 3) +
              bs(suitability_cereals, 3), Strauss(5000), data = covs, use.gam = TRUE) 
 # as we are interested in site intensiy, use that parameter 
 
-## Creat a predicted raster
+## Create a predicted raster
 fit_int <- predict(fit, type= "intensity", eps = 100)/max(predict(fit, type= "intensity", eps = 100))
 
-## Simulate possible site location. Do it 99 times
-# Parallelisation with parallel package optimised for Linux machines, change according to your needs or do not parallelise.
+## Simulate possible site location (99 iterations)
 set.seed(123)
 seeds <- sample(1:1e3, size = 99)
 clus <- parallel::makeCluster(parallel::detectCores() / 2, type = "FORK")
@@ -97,10 +96,12 @@ rast_pred <- stars::st_as_stars(dens_fit) |>
 # save
 stars::write_stars(obj = rast_pred, dsn = file.path(targetdir, "dens_prediction.tif"))
 
-## The simulation might serve to compute site catchments for further analyses
-## It does not serve to compute "site distribution" as the predict(fit) serves the same purpose
+## Suitability-based prediction ----
 
-## Now predict sites solely based on land suitability
+# The simulation might serve to compute site catchments for further analyses
+# It does not serve to compute "site distribution" as the predict(fit) serves the same purpose
+
+# CAREFUL, it may crush in case of insufficient memory
 clus <- parallel::makeCluster(3, type = "FORK")
 suit_pred <- parallel::parLapply(
   cl = clus,
@@ -121,6 +122,7 @@ suit_com <- suit_com/max(suit_com)
 suit_com <- stars::st_as_stars(suit_com) |>
   sf::st_set_crs("EPSG:3857")
 
+## Combine the results ----
 res <- (rast_pred + suit_com)/max((rast_pred + suit_com)$v, na.rm = T)
 
 fit_pred <- stars::st_as_stars(fit_int) |>
@@ -128,14 +130,14 @@ fit_pred <- stars::st_as_stars(fit_int) |>
 
 res2 <- (terra::resample(terra::rast(fit_pred), terra::rast(suit_com)) + terra::rast(suit_com))/max(terra::values((terra::resample(terra::rast(fit_pred), terra::rast(suit_com)) + terra::rast(suit_com))), na.rm = T)
 
-## save results
+# save 
 stars::write_stars(obj = fit_pred, dsn = file.path(targetdir, "prediction.tif"))
 stars::write_stars(obj = suit_com, dsn = file.path(targetdir, "suitability.tif"))
 stars::write_stars(obj = res, dsn = file.path(targetdir, "result.tif"))
 terra::writeRaster(res2, file.path(targetdir, "result2.tif"), overwrite = TRUE)
 
-## Supplementary analysis ----
-## Rerun the same but considering distance from rivers as an additional covariate
+#### Supplementary analysis ----
+# Rerun the same but considering distance from rivers as an additional covariate (for cereals)
 
 covs$suitability_cereals <- terra::rast(file.path(targetdir, "rasters", "extra", "suitability_cereals_rivers.tif")) |>
   terra::project(terra::crs(terra::vect(area))) |>
@@ -185,10 +187,12 @@ rast_pred <- stars::st_as_stars(dens_fit) |>
 stars::write_stars(obj = rast_pred, dsn = file.path(targetdir, "dens_prediction_SM.tif"))
 
 ## Now predict sites solely based on land suitability
-
-suit_pred <- lapply(
+# CAREFUL, it may crush in case of insufficient memory
+clus <- parallel::makeCluster(parallel::detectCores() / 3, type = "FORK")
+suit_pred <- parallel::parLapply(
+  cl = clus,
   X = covs[4:6],
-  FUN = function(cov){
+  fun = function(cov){
     tmp_pp <- rpoispp(cov, lmax = 1, win = as.owin(area), forcewin = TRUE)
     tmp_subpp <- sample(1:tmp_pp$n, 200)
     tmp_pp <- ppp(x = tmp_pp$x[tmp_subpp], y = tmp_pp$y[tmp_subpp], window = as.owin(area))
@@ -196,6 +200,7 @@ suit_pred <- lapply(
     tmp_scaled <- tmp_dens/max(tmp_dens)
     return(tmp_scaled)
   })
+parallel::stopCluster(clus)
 
 suit_com <- Reduce(f = function(x, y) {x+y}, x = suit_pred)
 suit_com <- suit_com/max(suit_com)
