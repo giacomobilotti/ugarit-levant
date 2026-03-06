@@ -20,10 +20,6 @@ Giacomo Bilotti (bilottigiacomo@gmail.com)
 
 The site of Ras Shamra, ancient Ugarit, located on the northern coast of Syria (Lattakia Governorate), was the capital of a flourishing kingdom during the 2nd millennium BC, documented both by archaeological excavations and numerous inscribed tablets that provide insight into its size and organisation. Previous studies based on historical data estimate that around 200 hamlets economically supported the city-state, with toponymic research identifying 17 of them, mostly located near Ugarit or along the coast. In this paper, we calculate the kingdom’s agricultural capacity and examine it in relation to its network of villages and subordinate settlements to better understand its organisation. Agricultural potential was quantified using suitability maps for the kingdom’s three primary crops: cereals, olives, and vines. Additionally, we employed point pattern analysis (PPA) to integrate the agricultural suitability proposed here with existing archaeological knowledge, identifying areas most likely to have hosted these villages. The results provide a renewed perspective on the kingdom’s hinterland during the Late Bronze Age, identifying areas most suitable for village locations based on economic factors and productivity. They also suggest a differentiation in the economic life of these hamlets.
 
-## Introduction 
-
-The repository contains the code and supplement for the paper. The repository is structured as follows:
-
 ## Structure of the repository
 
 The repository folder is structured as follows:
